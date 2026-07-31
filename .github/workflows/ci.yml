@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-hooks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate JS hooks syntax
+        run: |
+          for f in pb_hooks/*.js pb_migrations/*.js; do
+            [ -f "$f" ] && node --check "$f"
+          done
+      - name: Validate docker-compose
+        run: |
+          docker compose config --quiet || true
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [validate-hooks]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download PocketBase binary
+        run: |
+          curl -L -o pb.zip "https://github.com/pocketbase/pocketbase/releases/download/v0.22.20/pocketbase_0.22.20_linux_amd64.zip"
+          unzip -o pb.zip
+          chmod +x pocketbase
+      - name: Run migrations check
+        run: |
+          ./pocketbase serve --http=127.0.0.1:8090 &
+          sleep 3
+          curl -fsS http://127.0.0.1:8090/api/health || exit 1

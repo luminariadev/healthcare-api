@@ -1,0 +1,15 @@
+services:
+  pocketbase:
+    image: ghcr.io/pocketbase/pocketbase:latest
+    container_name: healthcare-api
+    restart: unless-stopped
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./pb_data:/appdata/data
+      - ./pb_hooks:/appdata/hooks
+      - ./pb_migrations:/appdata/migrations
+    environment:
+      - PB_ENCRYPTION_KEY=${PB_ENCRYPTION_KEY:-change-me-32-char-key-1234}
+      - FONNTE_API_KEY=${FONNTE_API_KEY:-}
+    command: serve --http=0.0.0.0:8080 --hooksDir=/appdata/hooks --migrationsDir=/appdata/migrations

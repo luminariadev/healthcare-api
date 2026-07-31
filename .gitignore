@@ -1,0 +1,31 @@
+# AI agent config files — NEVER commit
+AGENTS.md
+CLAUDE.md
+CURSOR.md
+CLINE.md
+*.cursorrules
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# PocketBase data
+pb_data/
+pb_public/
+pb_logs/
+
+# Build artifacts
+dist/
+build/
+node_modules/
+
+# OS
+Thumbs.db
+.DS_Store
+*.log
+
+# Editor
+.vscode/
+.idea/
