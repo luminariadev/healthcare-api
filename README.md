@@ -27,19 +27,28 @@ Backend untuk sistem **booking & antrean klinik** berbasis [PocketBase](https://
 
 ## 🚀 Cara Menjalankan
 
-### Opsi 1 — Docker (recommended)
+### Opsi 1 — Binary langsung (recommended untuk dev)
+
+```bash
+# 1. Download PocketBase v0.39+ dari
+#    https://github.com/pocketbase/pocketbase/releases
+#    (windows_amd64.zip) lalu letakkan di folder ini sebagai pocketbase.exe
+
+# 2. Jalankan server (migration otomatis dijalankan saat start)
+./pocketbase serve --http="0.0.0.0:8090"
+
+# 3. Buat superuser admin (pertama kali)
+./pocketbase superuser upsert admin@healthcare.local admin123456
+
+# 4. Buka dashboard & login
+#    http://127.0.0.1:8090/_/
+```
+
+### Opsi 2 — Docker (production)
 
 ```bash
 cp .env.example .env   # set PB_ENCRYPTION_KEY & FONNTE_API_KEY
-docker compose up -d
-```
-
-### Opsi 2 — Binary langsung
-
-```bash
-# download dari https://github.com/pocketbase/pocketbase/releases
-./pocketbase serve --http=0.0.0.0:8090
-# migrations di pb_migrations/ otomatis dijalankan saat start
+docker compose up -d --build
 ```
 
 ### Akses
